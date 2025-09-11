@@ -15,6 +15,20 @@
   <h1>Gmail → Obsidian: Options</h1>
 
   <div class="row">
+    <label for="vaultName">Obsidian vault name</label>
+    <input id="vaultName" type="text" placeholder="Second Brain" />
+    <div class="hint">Obsidian resolves the vault by <em>name</em> via the obsidian:// protocol. Make sure the app has this vault registered (open it once in Obsidian).</div>
+  </div>
+
+  <div class="row">
+    <label for="defaultNoteFolder">Default note folder (inside vault)</label>
+    <input id="defaultNoteFolder" type="text" placeholder="Email" />
+    <div class="hint">Optional, inside your vault (e.g., <code>Email</code> or <code>Clips/Gmail</code>).</div>
+  </div>
+
+  <hr />
+
+  <div class="row">
     <label for="containerSelector">Gmail body selector(s)</label>
     <input id="containerSelector" type="text" placeholder=".a3s.aiL, .a3s.ajx" />
     <div class="hint">Default: <code>.a3s.aiL, .a3s.ajx</code>. Comma-separated fallback selectors.</div>
@@ -48,8 +62,7 @@
   </div>
 
   <p class="hint">
-    Tip: Chrome always shows a Save dialog. To save quickly into your Obsidian vault,
-    add a shortcut/alias to your vault inside your Downloads folder.
+    Tip: If a thread is long, Obsidian URIs can get too large. The extension will automatically fall back to a file download in that case.
   </p>
 
   <button id="saveBtn">Save</button>

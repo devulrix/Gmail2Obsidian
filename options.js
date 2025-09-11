@@ -1,37 +1,51 @@
-// options.js (MV3-safe)
-
+// options.js
 const defaults = {
   containerSelector: ".a3s.aiL, .a3s.ajx",
   subjectSelector: ".hP",
   frontmatter: true,
   includeQuotes: false,
   stripWrote: true,
-  limitMessages: 0
+  limitMessages: 0,
+  vaultName: "",
+  defaultNoteFolder: "Email"
 };
 
-function loadOptions() {
-  chrome.storage.sync.get(defaults, (cfg) => {
-    for (const k of Object.keys(defaults)) {
-      const el = document.getElementById(k);
-      if (!el) continue;
-      if (el.type === "checkbox") el.checked = !!cfg[k];
-      else el.value = cfg[k];
-    }
-  });
-}
-
-function saveOptions() {
-  const cfg = {};
-  for (const k of Object.keys(defaults)) {
-    const el = document.getElementById(k);
-    if (!el) continue;
-    cfg[k] = el.type === "checkbox" ? el.checked : (el.type === "number" ? Number(el.value) || 0 : el.value.trim());
-  }
-  chrome.storage.sync.set(cfg, () => alert("Saved."));
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.type === "checkbox") el.checked = !!val;
+  else el.value = val ?? "";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadOptions();
-  const btn = document.getElementById("saveBtn");
-  if (btn) btn.addEventListener("click", saveOptions);
+  chrome.storage.sync.get(null, (cfg) => {
+    setVal("vaultName", cfg.vaultName ?? "");
+    setVal("defaultNoteFolder", cfg.defaultNoteFolder ?? "Email");
+    setVal("containerSelector", cfg.containerSelector ?? defaults.containerSelector);
+    setVal("subjectSelector", cfg.subjectSelector ?? defaults.subjectSelector);
+    setVal("frontmatter", cfg.frontmatter ?? true);
+    setVal("includeQuotes", cfg.includeQuotes ?? false);
+    setVal("stripWrote", cfg.stripWrote ?? true);
+    setVal("limitMessages", cfg.limitMessages ?? 0);
+  });
+
+  document.getElementById("saveBtn")?.addEventListener("click", () => {
+    const val = (id, type) => {
+      const el = document.getElementById(id);
+      if (type === "checkbox") return !!el.checked;
+      if (type === "number") return Number(el.value) || 0;
+      return (el.value || "").trim();
+    };
+    const cfg = {
+      vaultName: val("vaultName"),
+      defaultNoteFolder: val("defaultNoteFolder"),
+      containerSelector: val("containerSelector"),
+      subjectSelector: val("subjectSelector"),
+      frontmatter: val("frontmatter", "checkbox"),
+      includeQuotes: val("includeQuotes", "checkbox"),
+      stripWrote: val("stripWrote", "checkbox"),
+      limitMessages: val("limitMessages", "number")
+    };
+    chrome.storage.sync.set(cfg, () => alert("Saved."));
+  });
 });
