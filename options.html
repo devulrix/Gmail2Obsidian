@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Gmail → Obsidian: Options</title>
+  <style>
+    body { font-family: system-ui, Arial; margin: 24px; max-width: 720px; }
+    label { display:block; margin: 14px 0 6px; font-weight: 600; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 8px; }
+    .hint { color:#555; font-size: 0.9em; margin-top: 4px; }
+    .row { margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Gmail → Obsidian: Options</h1>
+
+  <div class="row">
+    <label for="containerSelector">Gmail body selector(s)</label>
+    <input id="containerSelector" type="text" placeholder=".a3s.aiL, .a3s.ajx" />
+    <div class="hint">Default: <code>.a3s.aiL, .a3s.ajx</code>. Comma-separated fallback selectors.</div>
+  </div>
+
+  <div class="row">
+    <label for="subjectSelector">Subject selector</label>
+    <input id="subjectSelector" type="text" placeholder=".hP" />
+    <div class="hint">Default: <code>.hP</code> (open-message view).</div>
+  </div>
+
+  <div class="row">
+    <label><input type="checkbox" id="frontmatter" /> Include YAML frontmatter</label>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <label><input type="checkbox" id="includeQuotes" /> Include hidden quoted history (Gmail “…” trimmed content)</label>
+    <div class="hint">Unchecked = capture only what each message adds (less duplication).</div>
+  </div>
+
+  <div class="row">
+    <label><input type="checkbox" id="stripWrote" /> Strip “On … wrote:” sections inside each message</label>
+    <div class="hint">Keeps only the new content of each message; reduces repeated history.</div>
+  </div>
+
+  <div class="row">
+    <label for="limitMessages">Limit to last N messages (0 = all)</label>
+    <input id="limitMessages" type="number" min="0" step="1" />
+  </div>
+
+  <p class="hint">
+    Tip: Chrome always shows a Save dialog. To save quickly into your Obsidian vault,
+    add a shortcut/alias to your vault inside your Downloads folder.
+  </p>
+
+  <button id="saveBtn">Save</button>
+
+  <script src="options.js" defer></script>
+</body>
+</html>

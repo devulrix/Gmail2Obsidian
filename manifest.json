@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail → Obsidian (Plain Markdown Export)",
+  "version": "0.2.1",
+  "description": "Export the open Gmail message to plain Markdown and save to your Obsidian vault.",
+  "permissions": ["activeTab", "scripting", "downloads", "storage", "notifications"],
+  "host_permissions": ["https://mail.google.com/*"],
+  "background": { "service_worker": "service_worker.js" },
+  "action": {
+    "default_title": "Save email to Obsidian",
+    "default_icon": { "16": "images/icon_16.png", "128": "images/icon_128.png" }
+  },
+  "icons": { "16": "images/icon_16.png", "128": "images/icon_128.png" },
+  "options_page": "options.html"
+}
