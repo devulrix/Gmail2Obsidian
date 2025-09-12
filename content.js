@@ -72,6 +72,12 @@ function extractPlain({
   // 4) Build thread body — process each message separately, with options
   const out = [];
   for (const wrap of wraps) {
+    // Extract timestamp for this message
+    let msgDate = "";
+    const msgDateEl = wrap.querySelector("span.g3[title], span.g3[alt]");
+    if (msgDateEl) {
+      msgDate = (msgDateEl.getAttribute("title") || msgDateEl.getAttribute("alt") || "").trim();
+    }
     // Prefer body parts containing "a3s" (covers aiL, ajx, etc.)
     // Optionally include quoted/trimmed history blocks
     let parts = Array.from(wrap.querySelectorAll('div[class*="a3s"]'));
@@ -113,6 +119,10 @@ function extractPlain({
     }
 
     if (msg) {
+      // Add timestamp header if available
+      if (msgDate) {
+        out.push(`**${msgDate}**\n\n`);
+      }
       // Per-message separator (helps readability in threads)
       out.push(msg.trim(), "\n\n---\n\n");
     }

@@ -1,29 +1,30 @@
 # Gmail → Obsidian (Plain Markdown Export)
 
-A minimal Chrome MV3 extension that exports the **currently open Gmail message or thread** to clean Markdown and saves it via Chrome’s **Save As** dialog—perfect for dropping into an Obsidian vault.
+A Chrome Manifest V3 extension that exports the text from the **currently open Gmail message or anexpanded thread of messages** to clean Markdown and saves it directly into your Obsidian vault (clipboard-first, via `obsidian://`), or falls back to file download when necessary.
 
 - ✅ Subject, sender, timestamp, `source_url`
 - ✅ Participants (YAML list)
 - ✅ Line breaks after DIV/SPAN so text doesn’t run together
-- ✅ Thread-aware (controls to include/trim history)
+- ✅ Supports multiple messages in a thread (only the parts you expand)
 - ✅ All processing runs locally in your browser
 
 ---
 
 ## Why
 
-Email is often where decisions and info live. This extension turns an open Gmail message (or thread) into a tidy Markdown note you can file in your second brain.
+Email often contains important decisions and information. This extension turns an open Gmail message (or thread) into a tidy Markdown note you can file in your second brain. The current Obsidian plugin, Web Clipper, does not support Gmail. This extension fills that gap.
 
 ---
 
 ## Features
 
-- **One‑click export.** Click the toolbar button on any Gmail message/page.
+- **Toolbar popup.** Manage settings and export right from the extension’s popup (no new tab for settings).
+- **One-click export.** Click **Export current email** in the popup.
 - **Frontmatter.** YAML properties (title, source, exported, from, date, participants).
-- **Thread controls.**
-  - **Limit to last N messages** — optional (0 = all)
-- **Robust extraction.** Targets Gmail’s stable body containers and walks the DOM, inserting sensible line breaks (paragraphs, spans, `<br>`).
-- **Resilient.** If Gmail tweaks CSS, you can adjust selectors in Options.
+- **Thread support.** Exports any messages you manually expand inside a thread.
+- **Last-N limit.** Optionally limit export to the last N messages (0 = all expanded).
+- **Clipboard-first.** Sends Markdown to clipboard, then calls `obsidian://new?clipboard=true`, so notes appear directly in your vault without hitting URL length limits.
+- **Fallbacks.** If clipboard fails, tries a `content=` URI; if too large, saves as `.md` via Chrome Downloads.
 
 ---
 
@@ -31,9 +32,9 @@ Email is often where decisions and info live. This extension turns an open Gmail
 
 1. Clone or download this repo.
 2. In Chrome, open `chrome://extensions`.
-3. Enable **Developer mode** (top‑right).
+3. Enable **Developer mode** (top-right).
 4. Click **Load unpacked** and select the project folder.
-5. (Optional) Pin the extension icon to the toolbar.
+5. Pin the extension icon to your toolbar.
 
 ---
 
@@ -41,39 +42,29 @@ Email is often where decisions and info live. This extension turns an open Gmail
 
 1. Open **Gmail** in Chrome.
 2. Open a message or a thread.
-3. Click the **Gmail → Obsidian** toolbar button.
-4. Choose a save location (Chrome always asks; see *Why no absolute path?*).
-5. The file name defaults to  
-   `YYYY-MM-DD - <Subject>.md`.
+3. Expand any messages you want included (including hidden “three dots” sections).
+4. Click the extension icon → **Export current email**.
+5. A new note appears in your Obsidian vault (if clipboard/URI succeeds), or Chrome prompts you to save the file.
 
-### Capturing sub‑emails in a thread (important)
-
-Gmail collapses earlier messages and quoted history behind UI controls.  
-If you want **everything**, **manually expand** the messages inside the thread (and any “three dots” trimmed content) **before** clicking the export button.  
-The extractor will then capture those expanded parts in order.
-
-You can also tune history behavior under **Options → Thread controls**.
+The file name defaults to  
+`YYYY-MM-DD - <Subject>.md`.
 
 ---
 
-## Options
+## Popup Options
 
-Open the extension’s Options page (right‑click the toolbar icon → **Options**) to set:
-
-- **Gmail body selector(s)**  
-  Defaults to `.a3s.aiL, .a3s.ajx`. Multiple selectors allowed, comma‑separated.
-- **Subject selector**  
-  Defaults to `.hP`.
-- **Include YAML frontmatter**  
-  On by default. Great for Obsidian Properties/Dataview.
-- **Limit to last N messages**  
-  0 = all. Useful for keeping exports short.
+- **Vault name** – must match your Obsidian vault name. Open the vault once in the Obsidian app so it’s registered.
+- **Default note folder** – optional; folder inside the vault (e.g. `Email` or `Clips/Gmail`).
+- **Gmail body selector(s)** – defaults to `.a3s.aiL, .a3s.ajx`. We expose these as a setting just in case Gmail changes their selectors.
+- **Gmail Subject selector** – defaults to `.hP`.
+- **Include YAML frontmatter** – on by default. This creates a meta section at the top of the note to provide context.
+- **Limit to last N messages** – 0 = all expanded messages.
 
 ---
 
 ## What gets exported
 
-Example frontmatter (when enabled):
+Example frontmatter:
 
 ```yaml
 ---
@@ -89,33 +80,6 @@ participants:
   - "Gideon Marken <gideonmarken@it.com>"
   - "Jerry Garcia <jerry@gd.com>"
 ---
+
+This is the body of the email.
 ```
-
-Body text respects paragraphs and inserts line breaks so inline spans don’t run together.
-
----
-
-## Troubleshooting
-
-- **“Couldn’t extract all of the email body in an email thread.”**  
-  Make sure a message is open; if it’s a thread, expand the messages you want included.
-
-
----
-
-## Privacy & Security
-
-- Runs **entirely in your browser**; no external servers.
-- Permissions:
-  - `activeTab`, `scripting` – injects the extractor on Gmail tabs
-  - `downloads` – saves the Markdown file
-  - `storage` – saves Options
-  - `notifications` – basic success/error notifications
-  - `host_permissions: https://mail.google.com/*` – restricts script injection to Gmail
-- Images are skipped by design (export is text‑only).
-
----
-
-## License
-
-MIT

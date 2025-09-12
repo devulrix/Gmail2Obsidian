@@ -4,24 +4,81 @@
   <meta charset="utf-8" />
   <title>Gmail → Obsidian: Options</title>
   <style>
-    body { font-family: system-ui, Arial; margin: 24px; max-width: 720px; }
-    label { display:block; margin: 14px 0 6px; font-weight: 600; }
-    input[type="text"], input[type="number"] { width: 100%; padding: 8px; }
+    body { font-family: system-ui, Arial; 
+      margin: 14px auto; max-width: 350px;
+      background: #aec9d4;
+      background: linear-gradient(90deg, rgba(174, 201, 212, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(242, 236, 179, 1) 100%); }
+    #container { border-radius: 12px; border: 1px solid #999; padding: 12px; background: #fff; }
+    label { display:block; margin: 6px 0 6px; font-weight: 600; }
+    input[type="text"], input[type="number"] { width: 260px; padding: 3px; font-size: 1em; }
     .hint { color:#555; font-size: 0.9em; margin-top: 4px; }
-    .row { margin-bottom: 14px; }
+    .row { margin-bottom: 10px; }
+    .notify { background:#f5f5f5; 
+      padding: 6px; color:#222; 
+      font-size: 1em; 
+      margin-top: 8px; 
+      text-align: center; 
+      border-radius: 8px; 
+      border: 2px solid #ffd51b; }
+    h1 { margin-top: 0; font-size: 1.5em; }
+    #saveBtn {
+      appearance: none;
+      background-color: #2ea44f;
+      border: 1px solid rgba(27, 31, 35, .15);
+      border-radius: 8px;
+      box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+      color: #fff;
+      cursor: pointer;
+      font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      padding: 4px 16px;
+      width: 80px;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      display: block;
+      white-space: nowrap;
+      margin: 0 auto;
+    }
+
+    #saveBtn:focus:not(:focus-visible):not(.focus-visible) {
+      box-shadow: none;
+      outline: none;
+    }
+
+    #saveBtn:hover {
+      background-color: #2c974b;
+    }
+
+    #saveBtn:focus {
+      box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+      outline: none;
+    }
+
+    #saveBtn:active {
+      background-color: #298e46;
+      box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+    }
   </style>
 </head>
 <body>
+<div id="container">
   <h1>Gmail → Obsidian: Options</h1>
-
+  <div class="row notify">
+    Before exporting an email thread, expand all messages you want included by clicking on them.
+  </div>
   <div class="row">
     <label for="vaultName">Obsidian vault name</label>
     <input id="vaultName" type="text" placeholder="Second Brain" />
-    <div class="hint">Obsidian resolves the vault by <em>name</em> via the obsidian:// protocol. Make sure the app has this vault registered (open it once in Obsidian).</div>
+    <div class="hint">Make sure Obsidian has this vault registered (open in Obsidian).</div>
   </div>
 
   <div class="row">
-    <label for="defaultNoteFolder">Default note folder (inside vault)</label>
+    <label for="defaultNoteFolder">Obsidian Default note folder</label>
     <input id="defaultNoteFolder" type="text" placeholder="Email" />
     <div class="hint">Optional, inside your vault (e.g., <code>Email</code> or <code>Clips/Gmail</code>).</div>
   </div>
@@ -29,25 +86,25 @@
   <hr />
 
   <div class="row">
-    <label for="containerSelector">Gmail body selector(s)</label>
+    <label for="containerSelector">Gmail Body Selector(s)</label>
     <input id="containerSelector" type="text" placeholder=".a3s.aiL, .a3s.ajx" />
-    <div class="hint">Default: <code>.a3s.aiL, .a3s.ajx</code>. Comma-separated fallback selectors.</div>
+    <div class="hint">Default: <code>.a3s.aiL, .a3s.ajx</code>. Comma-separated.</div>
   </div>
 
   <div class="row">
-    <label for="subjectSelector">Subject selector</label>
+    <label for="subjectSelector">Gmail Subject Selector</label>
     <input id="subjectSelector" type="text" placeholder=".hP" />
-    <div class="hint">Default: <code>.hP</code> (open-message view).</div>
+    <div class="hint">Default: <code>.hP</code>.</div>
   </div>
 
   <div class="row">
     <label><input type="checkbox" id="frontmatter" /> Include YAML frontmatter</label>
+    <div class="hint">A meta section at the top of the note context.</div>
   </div>
 
   <hr />
-
   <div class="row">
-    <label><input type="checkbox" id="includeQuotes" /> Include hidden quoted history (Gmail “…” trimmed content)</label>
+    <label><input type="checkbox" id="includeQuotes" /> Include hidden quoted history (In Gmail “…”)</label>
     <div class="hint">Unchecked = capture only what each message adds (less duplication).</div>
   </div>
 
@@ -55,18 +112,17 @@
     <label><input type="checkbox" id="stripWrote" /> Strip “On … wrote:” sections inside each message</label>
     <div class="hint">Keeps only the new content of each message; reduces repeated history.</div>
   </div>
-
   <div class="row">
     <label for="limitMessages">Limit to last N messages (0 = all)</label>
     <input id="limitMessages" type="number" min="0" step="1" />
   </div>
 
   <p class="hint">
-    Tip: If a thread is long, Obsidian URIs can get too large. The extension will automatically fall back to a file download in that case.
+    If a thread is long, the extension will use file download.
   </p>
 
   <button id="saveBtn">Save</button>
-
+</div> 
   <script src="options.js" defer></script>
 </body>
 </html>
