@@ -83,3 +83,9 @@ participants:
 
 This is the body of the email.
 ```
+
+Developed by: 
+Gideon Marken
+https://www.linkedin.com/in/gideonmarken/
+https://github.com/Emaj7th
+https://sonicwallpaper.bandcamp.com/
