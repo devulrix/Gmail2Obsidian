@@ -47,6 +47,14 @@ function joinPath(folder, base) {
   if (!folder) return base;
   return folder.replace(/^\/+|\/+$/g, "") + "/" + base;
 }
+function buildNotePath(folder, date, subject) {
+  const y = String(date.getFullYear());
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const baseName = `${y}-${m}-${d} - ${safeComponent(subject || "email")}.md`;
+  const relPath = joinPath(joinPath(joinPath((folder || "").trim(), y), m), baseName);
+  return { baseName, relPath };
+}
 function buildObsidianURIClipboard(vault, filePath) {
   // Keep slashes and spaces raw in 'file'
   let uri = "obsidian://new?";
@@ -135,16 +143,12 @@ chrome.action.onClicked.addListener((tab) => {
         return;
       }
 
-      // 2) Build filename/path
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, "0");
-      const d = String(now.getDate()).padStart(2, "0");
-      const baseName = `${y}-${m}-${d} - ${safeComponent(result.subject || "email")}.md`;
-
+      // 2) Build filename/path from mail date (YYYY/MM/), fall back to export time
+      const mailDate = result.dateISO ? new Date(result.dateISO) : null;
+      const date = mailDate && !isNaN(mailDate.getTime()) ? mailDate : new Date();
       const vault = (cfg.vaultName || "").trim();
       const folder = (cfg.defaultNoteFolder || "").trim();
-      const relPath = joinPath(folder, baseName);
+      const { baseName, relPath } = buildNotePath(folder, date, result.subject);
 
       // 3) Clipboard-first route (mirrors official Clipper)
       if (vault) {

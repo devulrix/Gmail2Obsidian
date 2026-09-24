@@ -47,14 +47,20 @@ Email often contains important decisions and information. This extension turns a
 5. A new note appears in your Obsidian vault (if clipboard/URI succeeds), or Chrome prompts you to save the file.
 
 The file name defaults to  
-`YYYY-MM-DD - <Subject>.md`.
+`YYYY-MM-DD - <Subject>.md`, using the email’s date.
+
+Notes are stored under `{parent}/{YYYY}/{MM}/`. For example, with parent folder `Email` and a message from 10 Sep 2025:
+
+```text
+Email/2025/09/2025-09-10 - Subject.md
+```
 
 ---
 
 ## Popup Options
 
 - **Vault name** – must match your Obsidian vault name. Open the vault once in the Obsidian app so it’s registered.
-- **Default note folder** – optional; folder inside the vault (e.g. `Email` or `Clips/Gmail`).
+- **Default note folder** – optional parent folder inside the vault (e.g. `Email` or `Clips/Gmail`). Year and month subfolders are created automatically from the email date.
 - **Gmail body selector(s)** – defaults to `.a3s.aiL, .a3s.ajx`. We expose these as a setting just in case Gmail changes their selectors.
 - **Gmail Subject selector** – defaults to `.hP`.
 - **Include YAML frontmatter** – on by default. This creates a meta section at the top of the note to provide context.

@@ -178,7 +178,7 @@ function extractPlain({
     body = hdr.join("\n") + bodyText;
   }
 
-  return { subject, body };
+  return { subject, body, dateISO };
 }
 
 // ---------- Helpers ----------
